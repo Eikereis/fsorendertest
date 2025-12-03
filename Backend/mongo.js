@@ -22,36 +22,30 @@ const personSchema = new mongoose.Schema({
 
 const Person = mongoose.model('Person', personSchema)
 
-const person = new Person({
-  name: name,
-  number: number,
-})
 
-if (name && number) { 
-    const person = new Person({
-      name: name,
-      number: number,
+if (name && number) {
+  const person = new Person({
+    name: name,
+    number: number,
+  })
+  person.save().then(result => {
+    result.forEach(console.log(`added ${name} number ${number} to phonebook`))
+    mongoose.connection.close()
+  }).catch(err => {
+    console.log(err)
+    mongoose.connection.close()
+  })
+} else {
+  Person.find({}).then(result => {
+    console.log('phonebook:')
+    result.forEach(person => {
+      console.log(`${person.name} ${person.number}`)
     })
-    person.save().then(result => {
-      console.log(`added ${name} number ${number} to phonebook`)
-       mongoose.connection.close()
-    }).catch(err => {
-      console.log(err)
-      mongoose.connection.close()
-    })
-} else { 
-    Person.find({}).then(result => {
-      console.log('phonebook:')
-        result.forEach(person => {
-            console.log(`${person.name} ${person.number}`)
-        })
-        mongoose.connection.close()
-    }).catch(err => {
-      console.log(err)
-      mongoose.connection.close()
-    })
+    mongoose.connection.close()
+  }).catch(err => {
+    console.log(err)
+    mongoose.connection.close()
+  })
 }
 
 
-//Password dbaccess
-//Username moocanton_db_user
